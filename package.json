@@ -1,0 +1,30 @@
+{
+  "name": "siteswitcher",
+  "version": "1.0.0",
+  "description": "Cross-platform CLI tool for managing system hosts files with remote configurations",
+  "type": "module",
+  "main": "src/cli.ts",
+  "scripts": {
+    "dev": "bun src/cli.ts",
+    "embed-config": "bun scripts/embed-config.ts",
+    "embed-config:restore": "git restore src/core/build-time-config.ts",
+    "build:macos-arm64": "bun embed-config && bun build --compile --target=bun-darwin-arm64 ./src/cli.ts --outfile=dist/siteswitcher-macos-arm64 && bun embed-config:restore",
+    "build:macos-x64": "bun embed-config && bun build --compile --target=bun-darwin-x64 ./src/cli.ts --outfile=dist/siteswitcher-macos-x64 && bun embed-config:restore",
+    "build:linux": "bun embed-config && bun build --compile --target=bun-linux-x64 ./src/cli.ts --outfile=dist/siteswitcher-linux && bun embed-config:restore",
+    "build:windows": "bun embed-config && bun build --compile --target=bun-windows-x64 ./src/cli.ts --outfile=dist/siteswitcher-windows.exe && bun embed-config:restore",
+    "build:all": "bun build:macos-arm64 && bun build:macos-x64 && bun build:linux && bun build:windows && bun embed-config:restore",
+    "test": "bun test"
+  },
+  "keywords": [
+    "cli",
+    "hosts",
+    "dns",
+    "devops",
+    "development"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

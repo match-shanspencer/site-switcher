@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "editor": null,
+  "hostsPath": "/etc/hosts",
+  "remoteHostsUris": {
+    "qa1": "https://example.com/qa1/hosts",
+    "qa2": "https://example.com//qa2/hosts",
+    "qa3": "https://example.com//qa3/hosts",
+    "preprod": "https://example.com//staging/hosts",
+    "prodWaco": "https://example.com//prod-region-001/hosts"
+  }
+}

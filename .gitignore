@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+
+# Bun
+.bun/
+bun.lockb
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Test coverage
+coverage/
+
+# Temporary files
+*.tmp
+
+# User configuration (contains private remote hosts)
+# Note: User configs are stored in ~/.siteswitcher/ which is outside the repo
+# Build-time config files (exclude actual configs, but allow example/template)
+config.local.json
+!config.local.json.example
