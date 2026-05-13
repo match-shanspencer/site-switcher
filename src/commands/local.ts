@@ -5,7 +5,6 @@ import {
   readOverridesFile,
   applyHostsFile,
   setActiveHostsName,
-  readSystemHostsFile,
 } from "../core/hosts-manager";
 import { getOverridesPath } from "../utils/platform";
 import { openInEditor } from "../utils/editor";
@@ -81,7 +80,7 @@ export const execute = async (args: string[]): Promise<void> => {
     }
   } else if (["show", "list"].includes(subcommand)) {
     try {
-      const content = await readSystemHostsFile();
+      const content = await readOverridesFile();
       const lines = content.split("\n");
 
       const GRAY = "\x1b[90m";
