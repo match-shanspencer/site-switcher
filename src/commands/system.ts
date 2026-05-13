@@ -11,7 +11,7 @@ fe80::1%lo0		localhost`;
 export const execute = async (args: string[]): Promise<void> => {
   const subcommand = args[0];
 
-  if (subcommand === 'show') {
+  if (['show', 'list'].includes(subcommand)) {
     try {
       const content = await readSystemHostsFile();
       const lines = content.split('\n');
@@ -27,7 +27,7 @@ export const execute = async (args: string[]): Promise<void> => {
       logger.error(`Failed to read hosts file: ${(error as Error).message}`);
       process.exit(1);
     }
-  } else if (subcommand === 'open') {
+  } else if (['open', 'edit'].includes(subcommand)) {
     const config = await loadConfig();
 
     logger.info(`Opening system hosts file: ${config.hostsPath}`);
@@ -52,7 +52,7 @@ export const execute = async (args: string[]): Promise<void> => {
       process.exit(1);
     }
   } else {
-    logger.error('Invalid subcommand. Use: system show, system open, or system restore');
+    logger.error('Invalid subcommand. Use: system list, system open, or system restore');
     process.exit(1);
   }
 };

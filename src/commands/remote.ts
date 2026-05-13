@@ -59,7 +59,7 @@ export const execute = async (args: string[]): Promise<void> => {
         process.exit(1);
       }
     }
-  } else if (subcommand === 'list') {
+  } else if (['list', 'show'].includes(subcommand)) {
     const config = await loadConfig();
 
     const hostInfos = await Promise.all(
@@ -80,7 +80,7 @@ export const execute = async (args: string[]): Promise<void> => {
     ]);
 
     logger.table(headers, rows);
-  } else if (subcommand === 'set') {
+  } else if (['set', 'use'].includes(subcommand)) {
     const name = args[1];
 
     if (!name) {

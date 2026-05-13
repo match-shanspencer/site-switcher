@@ -1,6 +1,6 @@
 import { loadConfig, getRemoteHostUrl } from '../core/config-manager';
 import { fetchRemoteHosts, getCachedHosts } from '../core/remote-fetcher';
-import { ensureOverridesFileExists, readOverridesFile, applyHostsFile, setActiveHostsName } from '../core/hosts-manager';
+import { ensureOverridesFileExists, readOverridesFile, applyHostsFile, setActiveHostsName, readSystemHostsFile } from '../core/hosts-manager';
 import { getOverridesPath } from '../utils/platform';
 import { openInEditor } from '../utils/editor';
 import { mergeHostsFiles } from '../core/merger';
@@ -9,7 +9,7 @@ import * as logger from '../utils/logger';
 export const execute = async (args: string[]): Promise<void> => {
   const subcommand = args[0];
 
-  if (subcommand === 'edit') {
+  if (['edit', 'open'].includes(subcommand)) {
     await ensureOverridesFileExists();
 
     const overridesPath = getOverridesPath();
@@ -23,7 +23,7 @@ export const execute = async (args: string[]): Promise<void> => {
       logger.error(`Failed to open editor: ${(error as Error).message}`);
       process.exit(1);
     }
-  } else if (subcommand === 'set') {
+  } else if (['set', 'use'].includes(subcommand)) {
     const name = args[1];
 
     if (!name) {
@@ -51,7 +51,7 @@ export const execute = async (args: string[]): Promise<void> => {
         logger.error(`Failed to fetch remote hosts '${name}': ${(error as Error).message}`);
         process.exit(1);
       }
-    }
+    } 
 
     logger.info(`Loading overrides...`);
     const overridesContent = await readOverridesFile();
@@ -71,8 +71,24 @@ export const execute = async (args: string[]): Promise<void> => {
       logger.error(`Failed to apply hosts file: ${(error as Error).message}`);
       process.exit(1);
     }
+  } else if (['show', 'list'].includes(subcommand)) {
+    try {
+      const content = await readSystemHostsFile();
+      const lines = content.split('\n');
+
+      const GRAY = '\x1b[90m';
+      const RESET = '\x1b[0m';
+
+      lines.forEach((line, index) => {
+        const lineNumber = (index + 1).toString().padStart(4, ' ');
+        console.log(`${GRAY}${lineNumber} │${RESET} ${line}`);
+      });
+    } catch (error) {
+      logger.error(`Failed to read hosts file: ${(error as Error).message}`);
+      process.exit(1);
+    }
   } else {
-    logger.error('Invalid subcommand. Use: local edit or local set <name>');
+    logger.error('Invalid subcommand. Use: local edit, local list or local set <name>');
     process.exit(1);
   }
 };
