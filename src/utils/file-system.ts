@@ -1,6 +1,6 @@
-import { existsSync, mkdirSync } from 'fs';
-import { readFile, writeFile, mkdir } from 'fs/promises';
-import { dirname } from 'path';
+import { existsSync, mkdirSync } from "fs";
+import { readFile, writeFile, mkdir } from "fs/promises";
+import { dirname } from "path";
 
 export const ensureDirectoryExists = async (dirPath: string): Promise<void> => {
   if (!existsSync(dirPath)) {
@@ -16,10 +16,10 @@ export const ensureDirectoryExistsSync = (dirPath: string): void => {
 
 export const readFileIfExists = async (filePath: string): Promise<string | null> => {
   try {
-    const content = await readFile(filePath, 'utf-8');
+    const content = await readFile(filePath, "utf-8");
     return content;
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       return null;
     }
     throw error;
@@ -31,7 +31,7 @@ export const writeFileAtomic = async (filePath: string, content: string): Promis
   await ensureDirectoryExists(dir);
 
   const tempPath = `${filePath}.tmp`;
-  await writeFile(tempPath, content, 'utf-8');
+  await writeFile(tempPath, content, "utf-8");
 
   await Bun.write(filePath, content);
 
@@ -45,9 +45,9 @@ export const writeFileAtomic = async (filePath: string, content: string): Promis
 export const writeFileAsync = async (filePath: string, content: string) => {
   const dir = dirname(filePath);
   await ensureDirectoryExists(dir);
-  
+
   await Bun.write(filePath, content);
-}
+};
 
 export const fileExists = async (filePath: string): Promise<boolean> => {
   return existsSync(filePath);

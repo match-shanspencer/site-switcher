@@ -47,7 +47,7 @@ bun run build:all
 ## For now you can add an alias to your ~/.zshrc file
 
 alias switch="path/to/repo/dist/siteswitcher-macos-arm64"
-# OR 
+# OR
 alias siteswitcher="path/to/repo/dist/siteswitcher-macos-arm64"
 ```
 
@@ -92,12 +92,14 @@ siteswitcher system restore
 ### Commands
 
 Commands are organized into namespaces:
+
 - **`local`**: Commands that work with local overrides
 - **`remote`**: Commands that work with remote hosts configurations
 - **`system`**: Commands that work with the system hosts file
 - **`config`**: Commands for managing configuration
 
 #### `remote list`
+
 Display all configured remote hosts with their status and last fetch time.
 
 ```bash
@@ -105,6 +107,7 @@ siteswitcher remote list
 ```
 
 #### `remote fetch [name]`
+
 Fetch and cache remote hosts configurations. If no name is provided, fetches all configured remotes.
 
 ```bash
@@ -113,6 +116,7 @@ siteswitcher remote fetch          # Fetch all configurations
 ```
 
 #### `set <name>` / `local set <name>`
+
 Apply a remote hosts configuration by merging it with local overrides and updating the system hosts file.
 
 ```bash
@@ -122,12 +126,14 @@ siteswitcher local set qa1
 ```
 
 This command:
+
 1. Loads the cached remote hosts file
 2. Loads your local overrides
 3. Merges them (overrides take precedence)
 4. Writes to system hosts file (requires sudo)
 
 #### `remote set <name>`
+
 Apply a remote hosts configuration without local overrides.
 
 ```bash
@@ -137,6 +143,7 @@ siteswitcher remote set qa1
 This command applies only the remote hosts configuration, ignoring any local overrides.
 
 #### `local edit`
+
 Open the local overrides file in your configured editor.
 
 ```bash
@@ -146,6 +153,7 @@ siteswitcher local edit
 Add your custom host entries here. They will override any matching entries from remote hosts files.
 
 #### `system show`
+
 Display the contents of the system hosts file with line numbers.
 
 ```bash
@@ -153,6 +161,7 @@ siteswitcher system show
 ```
 
 #### `system open`
+
 Open the system hosts file in your editor.
 
 ```bash
@@ -160,6 +169,7 @@ siteswitcher system open
 ```
 
 #### `system restore`
+
 Reset the system hosts file to default values (localhost entries only).
 
 ```bash
@@ -167,11 +177,13 @@ siteswitcher system restore
 ```
 
 This command:
+
 1. Applies the default hosts file content (localhost entries)
 2. Clears the active configuration name
 3. Useful for resetting to a clean state
 
 #### `active`
+
 Show the currently active remote hosts configuration name.
 
 ```bash
@@ -179,6 +191,7 @@ siteswitcher active
 ```
 
 #### `config list`
+
 Display the current configuration as JSON.
 
 ```bash
@@ -186,6 +199,7 @@ siteswitcher config list
 ```
 
 #### `config open`
+
 Open the configuration file in your editor.
 
 ```bash
@@ -193,6 +207,7 @@ siteswitcher config open
 ```
 
 #### `config set <key=value>`
+
 Set a configuration value.
 
 ```bash
@@ -201,6 +216,7 @@ siteswitcher config set remoteHostsUris.qa1=https://example.com/new-url
 ```
 
 #### `config restore`
+
 Restore configuration to default values, removing all user customizations.
 
 ```bash
@@ -208,6 +224,7 @@ siteswitcher config restore
 ```
 
 #### `version`
+
 Display version information.
 
 ```bash
@@ -286,6 +303,7 @@ The build process automatically embeds `config.local.json` into the compiled bin
 Remote hosts files are cached locally for 10 minutes. After the cache expires, the next `set` or `fetch` operation will automatically fetch fresh content from the remote URL.
 
 Cache metadata is stored in `~/.siteswitcher/cache/<name>.meta.json` and includes:
+
 - `lastFetched`: Timestamp of last successful fetch
 - `url`: The URL that was fetched
 
@@ -305,12 +323,14 @@ When you run `siteswitcher set <name>` or `siteswitcher local set <name>`, the t
 #### Example
 
 **Overrides file** (`~/.siteswitcher/overrides.hosts`):
+
 ```
 192.168.1.100 myapp.local
 10.0.0.50 api.myapp.local
 ```
 
 **Remote hosts file** (qa1):
+
 ```
 127.0.0.1 localhost
 10.0.1.100 api.myapp.local
@@ -318,6 +338,7 @@ When you run `siteswitcher set <name>` or `siteswitcher local set <name>`, the t
 ```
 
 **Merged result** (written to `/etc/hosts`):
+
 ```
 # === OVERRIDES ===
 192.168.1.100 myapp.local
@@ -347,6 +368,7 @@ The tool detects your editor in this order:
 - **Windows**: Tested on x64
 
 Default hosts file paths:
+
 - macOS/Linux: `/etc/hosts`
 - Windows: `C:\Windows\System32\drivers\etc\hosts`
 
@@ -355,12 +377,14 @@ Default hosts file paths:
 ### Permission Denied
 
 If you get permission errors when running `siteswitcher set` or `siteswitcher local set`:
+
 - The tool automatically uses `sudo` to write to the system hosts file
 - You'll be prompted for your password
 
 ### Remote Fetch Fails
 
 If fetching remote hosts fails when running `siteswitcher remote fetch`:
+
 - Check your internet connection
 - Verify the URL in config is correct
 - The tool will fall back to cached versions if available
@@ -368,6 +392,7 @@ If fetching remote hosts fails when running `siteswitcher remote fetch`:
 ### Editor Not Opening
 
 If the editor doesn't open:
+
 - Set your preferred editor: `siteswitcher config set editor=vim`
 - Or set the `$EDITOR` environment variable
 
@@ -376,4 +401,3 @@ If the editor doesn't open:
 ### Requirements
 
 - Bun 1.0+
-

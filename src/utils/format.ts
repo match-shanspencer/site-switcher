@@ -1,6 +1,6 @@
 export const formatTimestamp = (timestamp: number | null): string => {
   if (timestamp === null) {
-    return 'Never';
+    return "Never";
   }
 
   const now = Date.now();
@@ -20,5 +20,5 @@ export const formatTimestamp = (timestamp: number | null): string => {
   if (minutes > 0) {
     return `${minutes}m ago`;
   }
-  return 'Just now';
+  return "Just now";
 };

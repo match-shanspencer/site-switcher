@@ -1,6 +1,6 @@
-import { loadConfig } from '../core/config-manager';
-import { fetchRemoteHosts } from '../core/remote-fetcher';
-import * as logger from '../utils/logger';
+import { loadConfig } from "../core/config-manager";
+import { fetchRemoteHosts } from "../core/remote-fetcher";
+import * as logger from "../utils/logger";
 
 export const execute = async (args: string[]): Promise<void> => {
   const config = await loadConfig();
@@ -11,7 +11,7 @@ export const execute = async (args: string[]): Promise<void> => {
 
     if (!url) {
       logger.error(`Remote hosts configuration '${name}' not found`);
-      logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(', ')}`);
+      logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(", ")}`);
       process.exit(1);
     }
 
@@ -31,14 +31,14 @@ export const execute = async (args: string[]): Promise<void> => {
       Object.entries(config.remoteHostsUris).map(async ([name, url]) => {
         await fetchRemoteHosts(name, url);
         return name;
-      })
+      }),
     );
 
     let successCount = 0;
     let failureCount = 0;
 
     for (const result of results) {
-      if (result.status === 'fulfilled') {
+      if (result.status === "fulfilled") {
         logger.success(`Fetched ${result.value}`);
         successCount++;
       } else {
@@ -47,7 +47,7 @@ export const execute = async (args: string[]): Promise<void> => {
       }
     }
 
-    logger.log('');
+    logger.log("");
     logger.info(`Fetched ${successCount} of ${results.length} configurations`);
 
     if (failureCount > 0) {

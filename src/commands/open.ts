@@ -1,12 +1,12 @@
-import { loadConfig } from '../core/config-manager';
-import { openInEditor } from '../utils/editor';
-import * as logger from '../utils/logger';
+import { loadConfig } from "../core/config-manager";
+import { openInEditor } from "../utils/editor";
+import * as logger from "../utils/logger";
 
 export const execute = async (): Promise<void> => {
   const config = await loadConfig();
 
   logger.info(`Opening system hosts file: ${config.hostsPath}`);
-  logger.warn('Note: You may need sudo privileges to save changes');
+  logger.warn("Note: You may need sudo privileges to save changes");
 
   try {
     await openInEditor(config.hostsPath);

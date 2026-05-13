@@ -1,32 +1,36 @@
-import type { MergeResult } from '../types';
-import { extractHostnames } from './hosts-manager';
+import type { MergeResult } from "../types";
+import { extractHostnames } from "./hosts-manager";
 
-export const mergeHostsFiles = (remoteContent: string, overridesContent: string, remoteName: string): MergeResult => {
+export const mergeHostsFiles = (
+  remoteContent: string,
+  overridesContent: string,
+  remoteName: string,
+): MergeResult => {
   const lines: string[] = [];
   let overrideCount = 0;
   let commentedCount = 0;
 
   const overrideHostnames = extractHostnames(overridesContent);
 
-  lines.push('# === OVERRIDES ===');
+  lines.push("# === OVERRIDES ===");
 
-  const overrideLines = overridesContent.split('\n');
+  const overrideLines = overridesContent.split("\n");
   for (const line of overrideLines) {
     const trimmed = line.trim();
-    if (trimmed && !trimmed.startsWith('#')) {
+    if (trimmed && !trimmed.startsWith("#")) {
       overrideCount++;
     }
     lines.push(line);
   }
 
-  lines.push('');
+  lines.push("");
   lines.push(`# === REMOTE HOSTS (${remoteName}) ===`);
 
-  const remoteLines = remoteContent.split('\n');
+  const remoteLines = remoteContent.split("\n");
   for (const line of remoteLines) {
     const trimmed = line.trim();
 
-    if (trimmed === '' || trimmed.startsWith('#')) {
+    if (trimmed === "" || trimmed.startsWith("#")) {
       lines.push(line);
       continue;
     }
@@ -38,7 +42,7 @@ export const mergeHostsFiles = (remoteContent: string, overridesContent: string,
     }
 
     const hostnames = parts.slice(1);
-    const hasOverride = hostnames.some(hostname => overrideHostnames.has(hostname));
+    const hasOverride = hostnames.some((hostname) => overrideHostnames.has(hostname));
 
     if (hasOverride) {
       lines.push(`# ${line}  # Overridden above`);
@@ -48,7 +52,7 @@ export const mergeHostsFiles = (remoteContent: string, overridesContent: string,
     }
   }
 
-  const content = lines.join('\n');
+  const content = lines.join("\n");
 
   return {
     content,

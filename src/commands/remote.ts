@@ -1,13 +1,13 @@
-import { loadConfig, getRemoteHostUrl } from '../core/config-manager';
-import { fetchRemoteHosts, getCachedHosts, getRemoteHostInfo } from '../core/remote-fetcher';
-import { applyHostsFile, setActiveHostsName } from '../core/hosts-manager';
-import * as logger from '../utils/logger';
-import { formatTimestamp } from '../utils/format';
+import { loadConfig, getRemoteHostUrl } from "../core/config-manager";
+import { fetchRemoteHosts, getCachedHosts, getRemoteHostInfo } from "../core/remote-fetcher";
+import { applyHostsFile, setActiveHostsName } from "../core/hosts-manager";
+import * as logger from "../utils/logger";
+import { formatTimestamp } from "../utils/format";
 
 export const execute = async (args: string[]): Promise<void> => {
   const subcommand = args[0];
 
-  if (subcommand === 'fetch') {
+  if (subcommand === "fetch") {
     const config = await loadConfig();
     const name = args[1];
 
@@ -16,7 +16,7 @@ export const execute = async (args: string[]): Promise<void> => {
 
       if (!url) {
         logger.error(`Remote hosts configuration '${name}' not found`);
-        logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(', ')}`);
+        logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(", ")}`);
         process.exit(1);
       }
 
@@ -36,14 +36,14 @@ export const execute = async (args: string[]): Promise<void> => {
         Object.entries(config.remoteHostsUris).map(async ([name, url]) => {
           await fetchRemoteHosts(name, url);
           return name;
-        })
+        }),
       );
 
       let successCount = 0;
       let failureCount = 0;
 
       for (const result of results) {
-        if (result.status === 'fulfilled') {
+        if (result.status === "fulfilled") {
           logger.success(`Fetched ${result.value}`);
           successCount++;
         } else {
@@ -52,40 +52,38 @@ export const execute = async (args: string[]): Promise<void> => {
         }
       }
 
-      logger.log('');
+      logger.log("");
       logger.info(`Fetched ${successCount} of ${results.length} configurations`);
 
       if (failureCount > 0) {
         process.exit(1);
       }
     }
-  } else if (['list', 'show'].includes(subcommand)) {
+  } else if (["list", "show"].includes(subcommand)) {
     const config = await loadConfig();
 
     const hostInfos = await Promise.all(
-      Object.entries(config.remoteHostsUris).map(([name, url]) =>
-        getRemoteHostInfo(name, url)
-      )
+      Object.entries(config.remoteHostsUris).map(([name, url]) => getRemoteHostInfo(name, url)),
     );
 
-    logger.heading('Remote Hosts Configuration');
-    logger.log('');
+    logger.heading("Remote Hosts Configuration");
+    logger.log("");
 
-    const headers = ['Name', 'Last Fetched', 'Status', 'URL'];
-    const rows = hostInfos.map(info => [
+    const headers = ["Name", "Last Fetched", "Status", "URL"];
+    const rows = hostInfos.map((info) => [
       info.name,
       formatTimestamp(info.lastFetched),
-      info.cached ? 'Cached' : 'Not fetched',
+      info.cached ? "Cached" : "Not fetched",
       info.url,
     ]);
 
     logger.table(headers, rows);
-  } else if (['set', 'use'].includes(subcommand)) {
+  } else if (["set", "use"].includes(subcommand)) {
     const name = args[1];
 
     if (!name) {
-      logger.error('Please specify a remote hosts configuration name');
-      logger.info('Usage: siteswitcher remote set <name>');
+      logger.error("Please specify a remote hosts configuration name");
+      logger.info("Usage: siteswitcher remote set <name>");
       process.exit(1);
     }
 
@@ -94,7 +92,7 @@ export const execute = async (args: string[]): Promise<void> => {
 
     if (!url) {
       logger.error(`Remote hosts configuration '${name}' not found`);
-      logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(', ')}`);
+      logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(", ")}`);
       process.exit(1);
     }
 
@@ -122,7 +120,7 @@ export const execute = async (args: string[]): Promise<void> => {
       process.exit(1);
     }
   } else {
-    logger.error('Invalid subcommand. Use: remote fetch [name], remote list, or remote set <name>');
+    logger.error("Invalid subcommand. Use: remote fetch [name], remote list, or remote set <name>");
     process.exit(1);
   }
 };

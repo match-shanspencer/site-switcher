@@ -1,15 +1,15 @@
-import { loadConfig, getRemoteHostUrl } from '../core/config-manager';
-import { fetchRemoteHosts, getCachedHosts } from '../core/remote-fetcher';
-import { readOverridesFile, applyHostsFile, setActiveHostsName } from '../core/hosts-manager';
-import { mergeHostsFiles } from '../core/merger';
-import * as logger from '../utils/logger';
+import { loadConfig, getRemoteHostUrl } from "../core/config-manager";
+import { fetchRemoteHosts, getCachedHosts } from "../core/remote-fetcher";
+import { readOverridesFile, applyHostsFile, setActiveHostsName } from "../core/hosts-manager";
+import { mergeHostsFiles } from "../core/merger";
+import * as logger from "../utils/logger";
 
 export const execute = async (args: string[]): Promise<void> => {
   const name = args[0];
 
   if (!name) {
-    logger.error('Please specify a remote hosts configuration name');
-    logger.info('Usage: siteswitcher hosts set <name>');
+    logger.error("Please specify a remote hosts configuration name");
+    logger.info("Usage: siteswitcher hosts set <name>");
     process.exit(1);
   }
 
@@ -18,7 +18,7 @@ export const execute = async (args: string[]): Promise<void> => {
 
   if (!url) {
     logger.error(`Remote hosts configuration '${name}' not found`);
-    logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(', ')}`);
+    logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(", ")}`);
     process.exit(1);
   }
 
@@ -47,7 +47,9 @@ export const execute = async (args: string[]): Promise<void> => {
     await setActiveHostsName(name);
 
     logger.success(`Applied hosts configuration: ${name}`);
-    logger.info(`Overrides: ${mergeResult.overrideCount}, Commented: ${mergeResult.commentedCount}`);
+    logger.info(
+      `Overrides: ${mergeResult.overrideCount}, Commented: ${mergeResult.commentedCount}`,
+    );
   } catch (error) {
     logger.error(`Failed to apply hosts file: ${(error as Error).message}`);
     process.exit(1);

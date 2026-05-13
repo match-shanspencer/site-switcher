@@ -1,16 +1,16 @@
-import { readSystemHostsFile } from '../core/hosts-manager';
-import * as logger from '../utils/logger';
+import { readSystemHostsFile } from "../core/hosts-manager";
+import * as logger from "../utils/logger";
 
 export const execute = async (): Promise<void> => {
   try {
     const content = await readSystemHostsFile();
-    const lines = content.split('\n');
+    const lines = content.split("\n");
 
-    const GRAY = '\x1b[90m';
-    const RESET = '\x1b[0m';
+    const GRAY = "\x1b[90m";
+    const RESET = "\x1b[0m";
 
     lines.forEach((line, index) => {
-      const lineNumber = (index + 1).toString().padStart(4, ' ');
+      const lineNumber = (index + 1).toString().padStart(4, " ");
       console.log(`${GRAY}${lineNumber} │${RESET} ${line}`);
     });
   } catch (error) {

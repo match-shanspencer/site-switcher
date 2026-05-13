@@ -1,15 +1,15 @@
-import { spawn } from 'child_process';
-import { loadConfig } from '../core/config-manager';
-import { getPlatform } from './platform';
+import { spawn } from "child_process";
+import { loadConfig } from "../core/config-manager";
+import { getPlatform } from "./platform";
 
 const getDefaultEditor = (): string => {
   const platform = getPlatform();
 
-  if (platform === 'win32') {
-    return 'notepad';
+  if (platform === "win32") {
+    return "notepad";
   }
 
-  return 'vi';
+  return "vi";
 };
 
 export const detectEditor = async (): Promise<string> => {
@@ -35,10 +35,10 @@ export const openInEditor = async (filePath: string): Promise<void> => {
 
   return new Promise((resolve, reject) => {
     const child = spawn(editor, [filePath], {
-      stdio: 'inherit',
+      stdio: "inherit",
     });
 
-    child.on('close', (code) => {
+    child.on("close", (code) => {
       if (code === 0) {
         resolve();
       } else {
@@ -46,7 +46,7 @@ export const openInEditor = async (filePath: string): Promise<void> => {
       }
     });
 
-    child.on('error', (error) => {
+    child.on("error", (error) => {
       reject(error);
     });
   });

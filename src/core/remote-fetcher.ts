@@ -1,6 +1,12 @@
-import type { CacheMetadata, RemoteHostInfo } from '../types';
-import { getCachePath, getCacheMetadataPath, getCacheDirectory } from '../utils/platform';
-import { readFileIfExists, writeFileAtomic, writeJsonFile, readJsonFile, ensureDirectoryExists } from '../utils/file-system';
+import type { CacheMetadata, RemoteHostInfo } from "../types";
+import { getCachePath, getCacheMetadataPath, getCacheDirectory } from "../utils/platform";
+import {
+  readFileIfExists,
+  writeFileAtomic,
+  writeJsonFile,
+  readJsonFile,
+  ensureDirectoryExists,
+} from "../utils/file-system";
 
 export const fetchRemoteHosts = async (name: string, url: string): Promise<string> => {
   await ensureDirectoryExists(getCacheDirectory());

@@ -28,7 +28,7 @@ export interface RemoteHostInfo {
   cached: boolean;
 }
 
-export type Platform = 'darwin' | 'linux' | 'win32';
+export type Platform = "darwin" | "linux" | "win32";
 
 export interface MergeResult {
   content: string;

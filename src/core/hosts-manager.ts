@@ -1,20 +1,24 @@
-import { readFile } from 'fs/promises';
-import type { HostsEntry, ParsedHostsFile } from '../types';
-import { getOverridesPath, getTempMergedPath, getTempDirectory } from '../utils/platform';
-import { readFileIfExists, writeFileAtomic, ensureDirectoryExists, writeFileAsync } from '../utils/file-system';
-import { loadConfig } from './config-manager';
+import { readFile } from "fs/promises";
+import type { HostsEntry, ParsedHostsFile } from "../types";
+import { getOverridesPath, getTempMergedPath, getTempDirectory } from "../utils/platform";
+import {
+  readFileIfExists,
+  writeFileAtomic,
+  ensureDirectoryExists,
+  writeFileAsync,
+} from "../utils/file-system";
+import { loadConfig } from "./config-manager";
 // import { spawn } from 'child_process';
 
-
 export const parseHostsFile = (content: string): ParsedHostsFile => {
-  const lines = content.split('\n');
+  const lines = content.split("\n");
   const entries: HostsEntry[] = [];
   const comments: string[] = [];
 
   for (const line of lines) {
     const trimmed = line.trim();
 
-    if (trimmed === '' || trimmed.startsWith('#')) {
+    if (trimmed === "" || trimmed.startsWith("#")) {
       comments.push(line);
       continue;
     }
@@ -49,14 +53,14 @@ export const extractHostnames = (content: string): Set<string> => {
 
 export const readSystemHostsFile = async (): Promise<string> => {
   const config = await loadConfig();
-  const content = await readFile(config.hostsPath, 'utf-8');
+  const content = await readFile(config.hostsPath, "utf-8");
   return content;
 };
 
 export const readOverridesFile = async (): Promise<string> => {
   const overridesPath = getOverridesPath();
   const content = await readFileIfExists(overridesPath);
-  return content || '';
+  return content || "";
 };
 
 export const ensureOverridesFileExists = async (): Promise<void> => {
@@ -64,7 +68,10 @@ export const ensureOverridesFileExists = async (): Promise<void> => {
   const content = await readFileIfExists(overridesPath);
 
   if (content === null) {
-    await writeFileAtomic(overridesPath, '# Local overrides\n# Add your custom host entries here\n\n');
+    await writeFileAtomic(
+      overridesPath,
+      "# Local overrides\n# Add your custom host entries here\n\n",
+    );
   }
 };
 
@@ -97,22 +104,22 @@ export const applyHostsFile = async (content: string): Promise<void> => {
 };
 
 export const getActiveHostsName = async (): Promise<string | null> => {
-  const { getActivePath } = await import('../utils/platform');
+  const { getActivePath } = await import("../utils/platform");
   const content = await readFileIfExists(getActivePath());
   return content?.trim() || null;
 };
 
 export const setActiveHostsName = async (name: string): Promise<void> => {
-  const { getActivePath } = await import('../utils/platform');
+  const { getActivePath } = await import("../utils/platform");
   await writeFileAtomic(getActivePath(), name);
 };
 
 export const clearActiveHostsName = async (): Promise<void> => {
-  const { getActivePath } = await import('../utils/platform');
-  const { readFileIfExists, writeFileAtomic } = await import('../utils/file-system');
+  const { getActivePath } = await import("../utils/platform");
+  const { readFileIfExists, writeFileAtomic } = await import("../utils/file-system");
   const activePath = getActivePath();
   const content = await readFileIfExists(activePath);
   if (content) {
-    await writeFileAtomic(activePath, '');
+    await writeFileAtomic(activePath, "");
   }
 };

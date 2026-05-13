@@ -1,11 +1,16 @@
-import type { Config } from '../types';
-import { getConfigPath, getAppDirectory, getDefaultHostsPath, getBuildTimeConfigPath } from '../utils/platform';
-import { readJsonFile, writeJsonFile, ensureDirectoryExists } from '../utils/file-system';
-import { EMBEDDED_BUILD_TIME_CONFIG } from './build-time-config';
+import type { Config } from "../types";
+import {
+  getConfigPath,
+  getAppDirectory,
+  getDefaultHostsPath,
+  getBuildTimeConfigPath,
+} from "../utils/platform";
+import { readJsonFile, writeJsonFile, ensureDirectoryExists } from "../utils/file-system";
+import { EMBEDDED_BUILD_TIME_CONFIG } from "./build-time-config";
 
 export const getDefaultConfig = (): Config => {
   return {
-    version: '1.0',
+    version: "1.0",
     editor: null,
     hostsPath: getDefaultHostsPath(),
     remoteHostsUris: {},
@@ -49,7 +54,7 @@ export const loadConfig = async (): Promise<Config> => {
   let buildTimeConfig: Partial<Config> | null = null;
 
   const buildTimeConfigPath = getBuildTimeConfigPath();
-  const isDevelopment = process.execPath.includes('bun') || process.execPath.includes('node');
+  const isDevelopment = process.execPath.includes("bun") || process.execPath.includes("node");
 
   if (isDevelopment && buildTimeConfigPath) {
     // Development mode: read from file (allows live changes)
@@ -84,18 +89,20 @@ export const updateConfig = async (updates: Partial<Config>): Promise<void> => {
   const configPath = getConfigPath();
 
   // Read existing user config to preserve other fields
-  const existingUserConfig = await readJsonFile<Partial<Config>>(configPath) || {};
+  const existingUserConfig = (await readJsonFile<Partial<Config>>(configPath)) || {};
 
   // When updating, merge remoteHostsUris if provided
   const updatedConfig: Partial<Config> = {
     ...existingUserConfig,
     ...updates,
-    ...(updates.remoteHostsUris ? {
-      remoteHostsUris: {
-        ...(existingUserConfig.remoteHostsUris || {}),
-        ...updates.remoteHostsUris,
-      },
-    } : {}),
+    ...(updates.remoteHostsUris
+      ? {
+          remoteHostsUris: {
+            ...(existingUserConfig.remoteHostsUris || {}),
+            ...updates.remoteHostsUris,
+          },
+        }
+      : {}),
   };
 
   await writeJsonFile(configPath, updatedConfig);
@@ -105,15 +112,15 @@ export const setConfigValue = async (key: string, value: string): Promise<void> 
   const configPath = getConfigPath();
 
   // Read existing user config
-  const userConfig = await readJsonFile<Partial<Config>>(configPath) || {};
+  const userConfig = (await readJsonFile<Partial<Config>>(configPath)) || {};
 
-  const keys = key.split('.');
+  const keys = key.split(".");
   let current: any = userConfig;
 
   // Navigate/create the path in user config
   for (let i = 0; i < keys.length - 1; i++) {
     const k = keys[i];
-    if (!(k in current) || typeof current[k] !== 'object' || current[k] === null) {
+    if (!(k in current) || typeof current[k] !== "object" || current[k] === null) {
       current[k] = {};
     }
     current = current[k];
