@@ -2,23 +2,31 @@ import { loadConfig, getRemoteHostUrl } from "../core/config-manager";
 import { fetchRemoteHosts, getCachedHosts } from "../core/remote-fetcher";
 import { readOverridesFile, applyHostsFile, setActiveHostsName } from "../core/hosts-manager";
 import { mergeHostsFiles } from "../core/merger";
+import { getCustomHostPath, normalizeHostName } from "../utils/platform";
+import { fileExists } from "../utils/file-system";
+import { applyCustomHosts } from "./custom";
 import * as logger from "../utils/logger";
 
 export const execute = async (args: string[]): Promise<void> => {
   const name = args[0];
 
   if (!name) {
-    logger.error("Please specify a remote hosts configuration name");
-    logger.info("Usage: siteswitcher hosts set <name>");
+    logger.error("Please specify a hosts configuration name");
+    logger.info("Usage: siteswitcher set <name>");
     process.exit(1);
+  }
+
+  if (await fileExists(getCustomHostPath(normalizeHostName(name)))) {
+    await applyCustomHosts(name);
+    return;
   }
 
   const config = await loadConfig();
   const url = await getRemoteHostUrl(name);
 
   if (!url) {
-    logger.error(`Remote hosts configuration '${name}' not found`);
-    logger.info(`Available: ${Object.keys(config.remoteHostsUris).join(", ")}`);
+    logger.error(`Hosts configuration '${name}' not found`);
+    logger.info(`Remote configs available: ${Object.keys(config.remoteHostsUris).join(", ")}`);
     process.exit(1);
   }
 

@@ -6,9 +6,11 @@ import {
   applyHostsFile,
   setActiveHostsName,
 } from "../core/hosts-manager";
-import { getOverridesPath } from "../utils/platform";
+import { getOverridesPath, getCustomHostPath, normalizeHostName } from "../utils/platform";
+import { fileExists } from "../utils/file-system";
 import { openInEditor } from "../utils/editor";
 import { mergeHostsFiles } from "../core/merger";
+import { applyCustomHosts } from "./custom";
 import * as logger from "../utils/logger";
 
 export const execute = async (args: string[]): Promise<void> => {
@@ -32,9 +34,14 @@ export const execute = async (args: string[]): Promise<void> => {
     const name = args[1];
 
     if (!name) {
-      logger.error("Please specify a remote hosts configuration name");
+      logger.error("Please specify a hosts configuration name");
       logger.info("Usage: siteswitcher local set <name>");
       process.exit(1);
+    }
+
+    if (await fileExists(getCustomHostPath(normalizeHostName(name)))) {
+      await applyCustomHosts(name);
+      return;
     }
 
     const config = await loadConfig();

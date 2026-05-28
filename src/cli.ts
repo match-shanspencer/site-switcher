@@ -17,12 +17,17 @@ const showHelp = async (): Promise<void> => {
   logger.log("");
   logger.heading("Commands:");
   logger.log(
-    '  set <name>              Apply a remote hosts configuration (with local overrides). Alias for "local set <name>"',
+    '  set <name>              Apply a hosts configuration (custom or remote) with local overrides. Alias for "local set <name>"',
   );
   logger.log("  active                  Print the currently active hosts configuration name");
   logger.log("");
+  logger.log("  custom create <name>    Create a new custom hosts file");
+  logger.log("  custom edit <name>      Open a custom hosts file in editor");
+  logger.log("  custom set <name>       Apply a custom hosts file (with local overrides)");
+  logger.log("  custom list             List all custom hosts files");
+  logger.log("");
   logger.log("  local open|edit         Edit local override entries");
-  logger.log("  local set <name>        Apply a remote hosts configuration (with local overrides)");
+  logger.log("  local set <name>        Apply a hosts configuration (custom or remote) with local overrides");
   logger.log("  local list              List all local override entries");
   logger.log("");
   logger.log("  system open|edit        Open system hosts file in editor");
@@ -72,6 +77,11 @@ const main = async (): Promise<void> => {
       }
       case "remote": {
         const { execute } = await import("./commands/remote");
+        await execute(commandArgs);
+        break;
+      }
+      case "custom": {
+        const { execute } = await import("./commands/custom");
         await execute(commandArgs);
         break;
       }

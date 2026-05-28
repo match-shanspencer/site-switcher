@@ -28,11 +28,21 @@ export const getHomeDirectory = (): string => {
 };
 
 export const getAppDirectory = (): string => {
-  return join(getHomeDirectory(), ".siteswitcher");
+  return join(getHomeDirectory(), ".config", "siteswitcher");
 };
 
 export const getCacheDirectory = (): string => {
   return join(getAppDirectory(), "cache");
+};
+
+export const getCustomDirectory = (): string => {
+  return join(getAppDirectory(), "custom");
+};
+
+export const normalizeHostName = (name: string): string => name.replace(/\s+/g, "_");
+
+export const getCustomHostPath = (name: string): string => {
+  return join(getCustomDirectory(), normalizeHostName(name));
 };
 
 export const getTempDirectory = (): string => {
